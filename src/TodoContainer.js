@@ -4,23 +4,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
-import TodoListIcon from './TodoListIcon';
-import CheckIcon from '@mui/icons-material/Check';
 import CustomCheckbox from './CustomCheckbox'; // Import the custom checkbox component
-
+import tasksData from './tasks.json';
 
 export default function CheckboxList() {
-    const [checked, setChecked] = React.useState([0]);
+    const [checked, setChecked] = React.useState([]);
 
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
+    const handleToggle = (taskId) => () => {
+        const currentIndex = checked.indexOf(taskId);
         const newChecked = [...checked];
 
         if (currentIndex === -1) {
-            newChecked.push(value);
+            newChecked.push(taskId);
         } else {
             newChecked.splice(currentIndex, 1);
         }
@@ -30,36 +27,38 @@ export default function CheckboxList() {
 
     return (
         <List sx={{ width: '100%', maxWidth: 500, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }} className='todo-container'>
-            {[0, 1, 2, 3, 4, 5, 6].map((value) => {
-                const labelId = `checkbox-list-label-${value}`;
-
+            {tasksData.tasks.map((task) => {
+                const labelId = `checkbox-list-label-${task.id}`;
+                const isTaskChecked = checked.includes(task.id);
+                
                 return (
                     <><ListItem
-                        key={value}
+                        key={task.id}
                         secondaryAction={<IconButton edge="end" aria-label="comments">
                         </IconButton>}
                         disablePadding
                     >
-                        <ListItemButton role={undefined} onClick={handleToggle(value)} >
+                        <ListItemButton role={undefined} onClick={handleToggle(task.id)} >
                             <ListItemIcon>
-                            <CustomCheckbox // Use the custom checkbox component
+                                <CustomCheckbox // Use the custom checkbox component
                                     edge="start"
-                                    checked={checked.indexOf(value) !== -1}
+                                    checked={checked.includes(task.id)}
                                     tabIndex={-1}
                                     disableRipple
-                                    inputProps={{ 'aria-labelledby': labelId }} 
+                                    inputProps={{ 'aria-labelledby': labelId }}
                                     sx={{ color: '#ffffff' }}
                                 />
-                                {/* <TodoListIcon /> */}
                             </ListItemIcon>
 
                             <ListItemText
                                 id={labelId}
-                                primary={`Line item ${value + 1}`}
-                                primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#cacbe2' } }} // Apply fontFamily using TypographyProps
+                                primary={task.name}
+                                primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset',
+                                color: isTaskChecked ? '#4f526b' : '#cacbe2',
+                                textDecoration: isTaskChecked ? 'line-through' : 'none' } }} // Apply fontFamily using TypographyProps
                             />
                         </ListItemButton>
-                    </ListItem>{value !== 6 && <Divider className='divider' component="li" />}</>
+                    </ListItem>{tasksData.tasks.indexOf(task) !== tasksData.tasks.length - 1 && <Divider className='divider' component="li" />}</>
 
 
                 );

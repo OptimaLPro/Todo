@@ -33,7 +33,7 @@ export default function CheckboxList() {
 
                     <ListItemText
                         primary={text}
-                        primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#61637a' } }} // Apply fontFamily using TypographyProps
+                        primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} // Apply fontFamily using TypographyProps
                     />
                 </ListItemButton>
             </ListItem></>
