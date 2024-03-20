@@ -8,9 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import CustomCheckbox from './CustomCheckbox'; // Import the custom checkbox component
 import tasksData from './tasks.json';
+import ListFilter from './ListFilter';
 
 export default function CheckboxList() {
-    const [checked, setChecked] = React.useState([]);
+    const [checked, setChecked] = React.useState(tasksData.tasks.filter((task) => task.completed).map((task) => task.id));
 
     const handleToggle = (taskId) => () => {
         const currentIndex = checked.indexOf(taskId);
@@ -21,8 +22,13 @@ export default function CheckboxList() {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
+        console.log(newChecked);
         setChecked(newChecked);
+    };
+
+    const deleteCompleted = () => {
+        setChecked([]);
+        tasksData.tasks = tasksData.tasks.filter((task) => !checked.includes(task.id));
     };
 
     return (
@@ -30,14 +36,11 @@ export default function CheckboxList() {
             {tasksData.tasks.map((task) => {
                 const labelId = `checkbox-list-label-${task.id}`;
                 const isTaskChecked = checked.includes(task.id);
-                
+
                 return (
                     <><ListItem
                         key={task.id}
-                        secondaryAction={<IconButton edge="end" aria-label="comments">
-                        </IconButton>}
-                        disablePadding
-                    >
+                        disablePadding>
                         <ListItemButton role={undefined} onClick={handleToggle(task.id)} >
                             <ListItemIcon>
                                 <CustomCheckbox // Use the custom checkbox component
@@ -53,16 +56,25 @@ export default function CheckboxList() {
                             <ListItemText
                                 id={labelId}
                                 primary={task.name}
-                                primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset',
-                                color: isTaskChecked ? '#4f526b' : '#cacbe2',
-                                textDecoration: isTaskChecked ? 'line-through' : 'none' } }} // Apply fontFamily using TypographyProps
+                                primaryTypographyProps={{
+                                    style: {
+                                        fontFamily: 'Josefin Sans', fontWeight: 'unset',
+                                        color: isTaskChecked ? '#4f526b' : '#cacbe2',
+                                        textDecoration: isTaskChecked ? 'line-through' : 'none'
+                                    }
+                                }} // Apply fontFamily using TypographyProps
                             />
                         </ListItemButton>
-                    </ListItem>{tasksData.tasks.indexOf(task) !== tasksData.tasks.length - 1 && <Divider className='divider' component="li" />}</>
-
-
+                    </ListItem>
+                        <Divider className='divider' component="li" />
+                    </>
                 );
             })}
+            <ListItem className='action-bar'>
+                <ListItemText primary={`${tasksData.tasks.length - checked.length} items left`} primaryTypographyProps={{ style: {fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
+                <ListFilter checked={checked} setChecked={setChecked} />
+                <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: {fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer"} }} onClick={deleteCompleted}/>
+            </ListItem>
         </List>
     );
 }

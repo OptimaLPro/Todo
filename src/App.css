@@ -110,3 +110,19 @@
   cursor: pointer;
 
 }
+.list-filter{
+  display: flex;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* margin-top: 10px; */
+  /* margin-bottom: 10px; */
+}
+
+.action-bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
