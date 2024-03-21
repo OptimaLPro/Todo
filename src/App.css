@@ -33,11 +33,11 @@
 }
 
 .title {
-  font-size: 35px;
+  font-size: 38px;
   font-weight: 700;
   display: flex;
   align-items: center;
-  margin-right: 350px;
+  margin-right: 400px;
   margin-bottom: 30px; /* Add some space below the title */
 }
 

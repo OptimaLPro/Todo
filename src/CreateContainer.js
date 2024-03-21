@@ -3,41 +3,63 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 import TodoListIcon from './TodoListIcon';
+import CreateTask from './CreateTask';
 
 export default function CheckboxList() {
-    const [text, setText] = React.useState('Create a new todo...');
+    const [taskName, setTaskName] = React.useState('');
+
+    const handleTaskNameChange = (event) => {
+        setTaskName(event.target.value);
+    };
+
+    const handleCreateTask = () => {
+        // Handle creating the task with the entered task name
+        console.log('Creating task:', taskName);
+        // Reset taskName after creating the task
+        setTaskName('');
+    };
 
     return (
-        <List sx={{ width: '100%', maxWidth: 500, bgcolor: '#25273c', marginBottom: '25px' }} className='create-container'>
-
-            <><ListItem
-                secondaryAction={<IconButton edge="end" aria-label="comments">
-                </IconButton>}
+        <List sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', marginBottom: '25px', paddingBottom: '0px', paddingTop: '0px' }} className='create-container'>
+            <ListItem
                 disablePadding
             >
                 <ListItemButton role={undefined}>
                     <ListItemIcon>
-                        {/* <Checkbox
-                                    edge="start"
-                                    checked={checked.indexOf(value) !== -1}
-                                    tabIndex={-1}
-                                    disableRipple
-                                    inputProps={{ 'aria-labelledby': labelId }} 
-                                    sx={{ color: '#ffffff', borderRadius: '50%' }}/> */}
                         <TodoListIcon />
                     </ListItemIcon>
 
-                    <ListItemText
-                        primary={text}
-                        primaryTypographyProps={{ style: { fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} // Apply fontFamily using TypographyProps
+                    <TextField
+                        value={taskName}
+                        placeholder="Create a new todo..."
+                        onChange={handleTaskNameChange}
+                        InputProps={{
+                            style: {
+                                fontFamily: 'Josefin Sans',
+                                fontWeight: 'unset',
+                                color: '#9395ab'
+                            }
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                border: 'none', // Remove the black border
+                                '& fieldset': {
+                                    border: 'none', // Remove the black border on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    border: 'none', // Remove the blue focus outline
+                                },
+                            },
+                        }}
+                        fullWidth
+                        
                     />
-                </ListItemButton>
-            </ListItem></>
 
+                    <CreateTask onClick={handleCreateTask} />
+                </ListItemButton>
+            </ListItem>
         </List>
     );
 }

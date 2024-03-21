@@ -12,6 +12,7 @@ import ListFilter from './ListFilter';
 
 export default function CheckboxList() {
     const [checked, setChecked] = React.useState(tasksData.tasks.filter((task) => task.completed).map((task) => task.id));
+    const [tasks, setTasks] = React.useState(tasksData.tasks);
 
     const handleToggle = (taskId) => () => {
         const currentIndex = checked.indexOf(taskId);
@@ -29,10 +30,11 @@ export default function CheckboxList() {
     const deleteCompleted = () => {
         setChecked([]);
         tasksData.tasks = tasksData.tasks.filter((task) => !checked.includes(task.id));
+        setChecked(tasksData.tasks.filter((task) => task.completed).map((task) => task.id));
     };
 
     return (
-        <List sx={{ width: '100%', maxWidth: 500, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }} className='todo-container'>
+        <List sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }} className='todo-container'>
             {tasksData.tasks.map((task) => {
                 const labelId = `checkbox-list-label-${task.id}`;
                 const isTaskChecked = checked.includes(task.id);
@@ -71,9 +73,9 @@ export default function CheckboxList() {
                 );
             })}
             <ListItem className='action-bar'>
-                <ListItemText primary={`${tasksData.tasks.length - checked.length} items left`} primaryTypographyProps={{ style: {fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
-                <ListFilter checked={checked} setChecked={setChecked} />
-                <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: {fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer"} }} onClick={deleteCompleted}/>
+                <ListItemText primary={`${tasksData.tasks.length - checked.length} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
+                <ListFilter checked={checked} setChecked={setChecked} handleToggle={() => handleToggle} tasks={tasks} setTasks={setTasks} />
+                <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={deleteCompleted} />
             </ListItem>
         </List>
     );
