@@ -26,7 +26,6 @@ export default function CheckboxList(newTasks) {
     useEffect(() => {
         newTasks = newTasks.newTasks || [];
         if (newTasks.length > 0) {
-            console.log('New task:', newTasks[newTasks.length - 1]);
             const updatedTasks = [...tasks, newTasks[newTasks.length - 1]];
             setTasks(updatedTasks);
         }
@@ -45,13 +44,12 @@ export default function CheckboxList(newTasks) {
             if (taskValue.id === taskId) {
                 taskValue.completed = !taskValue.completed;
                 localStorage.setItem(taskKey, JSON.stringify(taskValue));
-                console.log('Task value:', taskValue);
             }
         }
     };
 
     const onDragEnd = (result) => {
-        if (!result.destination) return; // dropped outside the list
+        if (!result.destination) return;
 
         const reorderedTasks = Array.from(tasks);
         const [reorderedItem] = reorderedTasks.splice(result.source.index, 1);
@@ -67,11 +65,8 @@ export default function CheckboxList(newTasks) {
             const key = localStorage.key(i);
             if (key && !isNaN(key)) {
                 const taskValue = JSON.parse(localStorage.getItem(key));
-                console.log('Task value:', taskValue);
                 if (taskValue && taskValue.completed) {
-                    console.log('Removing task:', taskValue);
                     localStorage.removeItem(key);
-                    console.log(localStorage.length);
                 }
             }
         }
