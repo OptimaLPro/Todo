@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import ListItemText from '@mui/material/ListItemText';
 
 const ListFilter = ({setTasks}) => {

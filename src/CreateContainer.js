@@ -8,9 +8,8 @@ import TodoListIcon from './TodoListIcon';
 
 export default function CreateContainer({ onTaskAdded }) {
     const [taskName, setTaskName] = React.useState('');
-    const [counter, setCounter] = React.useState(0);
 
-    const handleTaskNameChange = (event) => {
+    const filterType = (event) => {
         setTaskName(event.target.value);
     };
 
@@ -20,7 +19,6 @@ export default function CreateContainer({ onTaskAdded }) {
             localStorage.setItem(localStorage.length, JSON.stringify(newTask));
             onTaskAdded(newTask); // Call the callback function to update TodoContainer
             setTaskName('');
-            setCounter(localStorage.length);
         }
     };
 
@@ -34,7 +32,7 @@ export default function CreateContainer({ onTaskAdded }) {
                     <TextField
                         value={taskName}
                         placeholder="Create a new todo..."
-                        onChange={handleTaskNameChange}
+                        onChange={filterType}
                         onKeyDown={handleKeyDown}
                         InputProps={{
                             style: {

@@ -1,21 +1,15 @@
 import React, { useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import CustomCheckbox from './CustomCheckbox'; // Import the custom checkbox component
+import CustomCheckbox from './CustomCheckbox';
 import ListFilter from './ListFilter';
 
 export default function CheckboxList(newTasks) {
-    const [checked, setChecked] = React.useState(() => {
-        return [];
-        // const storedChecked = localStorage.getItem('checked') ? localStorage.getItem('checked').split(',') : [];
-        // console.log('Stored checked:', storedChecked);
-        // return storedChecked;
-    });
-
     const [tasks, setTasks] = React.useState(() => {
         const storedTasks = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -29,12 +23,6 @@ export default function CheckboxList(newTasks) {
         return storedTasks;
     });
 
-
-    // useEffect(() => {
-    //     // localStorage.setItem('checked', checked);
-    //     console.log('Checked:', checked);
-    // }, [checked]);
-
     useEffect(() => {
         newTasks = newTasks.newTasks || [];
         if (newTasks.length > 0) {
@@ -44,7 +32,7 @@ export default function CheckboxList(newTasks) {
         }
     }, [newTasks]);
 
-    const handleToggle = (taskId) => () => {
+    const taskClickHandle = (taskId) => () => {
         const updatedTasks = tasks.map(task =>
             task.id === taskId ? { ...task, completed: !task.completed } : task
         );
@@ -56,14 +44,23 @@ export default function CheckboxList(newTasks) {
             const taskValue = JSON.parse(localStorage.getItem(taskKey));
             if (taskValue.id === taskId) {
                 taskValue.completed = !taskValue.completed;
-                // taskValue.checked = !taskValue.checked;
                 localStorage.setItem(taskKey, JSON.stringify(taskValue));
                 console.log('Task value:', taskValue);
             }
         }
     };
 
-    const deleteCompleted = () => {
+    const onDragEnd = (result) => {
+        if (!result.destination) return; // dropped outside the list
+
+        const reorderedTasks = Array.from(tasks);
+        const [reorderedItem] = reorderedTasks.splice(result.source.index, 1);
+        reorderedTasks.splice(result.destination.index, 0, reorderedItem);
+
+        setTasks(reorderedTasks);
+    };
+
+    const clearCompleted = () => {
         const updatedTasks = tasks.filter((task) => !task.completed);
 
         for (let i = localStorage.length - 1; i >= 0; i--) {
@@ -78,55 +75,67 @@ export default function CheckboxList(newTasks) {
                 }
             }
         }
-
         setTasks(updatedTasks);
-        setChecked([]);
     };
 
-
     return (
-        <List sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }} className='todo-container'>
-            {tasks.map((task) => {
-                const labelId = `checkbox-list-label-${task.id}`;
-                // const isTaskChecked = checked.includes(task.id);
-                const isTaskChecked = task.completed;
-
-                return (
-                    <React.Fragment key={task.id}>
-                        <ListItem disablePadding>
-                            <ListItemButton role={undefined} onClick={handleToggle(task.id)}>
-                                <ListItemIcon>
-                                    <CustomCheckbox
-                                        edge="start"
-                                        checked={isTaskChecked}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{ 'aria-labelledby': labelId }}
-                                        sx={{ color: '#ffffff' }}
-                                    />
-                                </ListItemIcon>
-                                <ListItemText
-                                    id={labelId}
-                                    primary={task.value}
-                                    primaryTypographyProps={{
-                                        style: {
-                                            fontFamily: 'Josefin Sans', fontWeight: 'unset',
-                                            color: isTaskChecked ? '#4f526b' : '#cacbe2',
-                                            textDecoration: isTaskChecked ? 'line-through' : 'none',
-                                        }
-                                    }}
-                                />
-                            </ListItemButton>
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="tasks">
+                {(provided) => (
+                    <List
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }}
+                        className='todo-container'
+                    >
+                        {tasks.map((task, index) => (
+                            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                                {(provided) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                    >
+                                        <ListItem disablePadding>
+                                            <ListItemButton role={undefined} onClick={taskClickHandle(task.id)}>
+                                                <ListItemIcon>
+                                                    <CustomCheckbox
+                                                        edge="start"
+                                                        checked={task.completed}
+                                                        tabIndex={-1}
+                                                        disableRipple
+                                                        inputProps={{ 'aria-labelledby': `checkbox-list-label-${task.id}` }}
+                                                        sx={{ color: '#ffffff' }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    id={`checkbox-list-label-${task.id}`}
+                                                    primary={task.value}
+                                                    primaryTypographyProps={{
+                                                        style: {
+                                                            fontFamily: 'Josefin Sans', fontWeight: 'unset',
+                                                            color: task.completed ? '#4f526b' : '#cacbe2',
+                                                            textDecoration: task.completed ? 'line-through' : 'none',
+                                                        }
+                                                    }}
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <Divider className='divider' component="li" />
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
+                        <ListItem className='action-bar'>
+                            <ListItemText primary={`${tasks.length} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
+                            <ListFilter setTasks={setTasks} />
+                            <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} />
                         </ListItem>
-                        <Divider className='divider' component="li" />
-                    </React.Fragment>
-                );
-            })}
-            <ListItem className='action-bar'>
-                <ListItemText primary={`${tasks.length - checked.length} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
-                <ListFilter setTasks={setTasks}/>
-                <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={deleteCompleted} />
-            </ListItem>
-        </List>
+                    </List>
+                )}
+            </Droppable>
+
+        </DragDropContext>
     );
 }
