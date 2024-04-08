@@ -1,54 +1,35 @@
 import React from 'react';
 import { useEffect } from 'react';
 import ListItemText from '@mui/material/ListItemText';
-import tasksData from './tasks.json';
 
-const ListFilter = ({ checked, setChecked, handleToggle, tasks, setTasks }) => {
-    let filtered_tasks;
-
-    async function fetchTasksData(status = 'all') {
-        try {
-            const response = await fetch('http://localhost:8000/tasks');
-            if (!response.ok) {
-                throw new Error('Failed to fetch tasks data');
-            }
-            let data = await response.json();
-
-            if (status === 'active') {
-                data = data.filter((task) => task.completed === false);
-            } else if (status === 'completed') {
-                data = data.filter((task) => task.completed === true);
-            }
-            console.log('Fetched tasks data:', data);
-            setChecked(data);
-            return data;
-        } catch (error) {
-            console.error('Error fetching tasks data:', error);
-            return []; // Return empty array in case of error
-        }
-    }
-
-    // useEffect(() => {
-    //     filtered_tasks = fetchTasksData();
-    //     // console.log('Filtered tasks:', filtered_tasks);
-    //     // setTasks(filtered_tasks);
-
-    // }, []);
-
+const ListFilter = ({setTasks}) => {
 
     const filter = (e) => {
         const filter = e.target.innerText.toLowerCase();
-        let newChecked = [];
 
-        if (filter === 'all') {
-            fetchTasksData();
-        } else if (filter === 'active') {
-            fetchTasksData('active');
-        } else if (filter === 'completed') {
-            fetchTasksData('completed');
+        const storedTasks = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            if (isNaN(localStorage.key(i))) continue;
+            const taskKey = parseInt(localStorage.key(i));
+            const taskValue = JSON.parse(localStorage.getItem(taskKey));
+            if (filter === 'all') {
+                const storedTask = { id: taskKey, value: taskValue.value, completed: taskValue.completed };
+                storedTasks.push(storedTask);
+            } else if (filter === 'active') {
+                if (taskValue.completed === false) {
+                    const storedTask = { id: taskKey, value: taskValue.value, completed: taskValue.completed };
+                    storedTasks.push(storedTask);
+                }
+            } else if (filter === 'completed') {
+                if (taskValue.completed === true) {
+                    const storedTask = { id: taskKey, value: taskValue.value, completed: taskValue.completed };
+                    storedTasks.push(storedTask);
+                }
+            }
+
         }
-
-        setChecked(newChecked);
+        // storedTasks.sort((a, b) => a.id - b.id);
+        setTasks(storedTasks);
     };
 
 

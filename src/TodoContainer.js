@@ -25,9 +25,7 @@ export default function CheckboxList(newTasks) {
             const storedTask = { id: taskKey, value: taskValue.value, completed: taskValue.completed };
             storedTasks.push(storedTask);
         }
-        console.log('Stored tasks:', storedTasks);
-        storedTasks.sort((a, b) => a.id - b.id); // Sort tasks by id in ascending order
-
+        storedTasks.sort((a, b) => a.id - b.id);
         return storedTasks;
     });
 
@@ -126,7 +124,7 @@ export default function CheckboxList(newTasks) {
             })}
             <ListItem className='action-bar'>
                 <ListItemText primary={`${tasks.length - checked.length} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
-                <ListFilter checked={checked} setChecked={setChecked} />
+                <ListFilter setTasks={setTasks}/>
                 <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={deleteCompleted} />
             </ListItem>
         </List>
