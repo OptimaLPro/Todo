@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -23,7 +23,7 @@ export default function CheckboxList(newTasks) {
         return storedTasks;
     });
 
-    
+
 
     useEffect(() => {
         newTasks = newTasks.newTasks || [];
@@ -82,6 +82,23 @@ export default function CheckboxList(newTasks) {
         setTasks(updatedTasks);
     };
 
+    const listItemRef = useRef(null);
+    const isHovering = useRef(false);
+
+    const itemHoverHandle = () => {
+        if (!isHovering.current) {
+            console.log('Item hovered!');
+            isHovering.current = true;
+        }
+    };
+
+    const itemLeaveHandle = () => {
+        console.log('Item left!');
+        isHovering.current = false;
+    };
+
+    const completedFalseTasksLength = tasks.filter(task => !task.completed).length;
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="tasks">
@@ -93,18 +110,26 @@ export default function CheckboxList(newTasks) {
                         className='todo-container'
                     >
                         {tasks.map((task, index) => (
-                            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                            <Draggable key={task.id} draggableId={String(task.id)} index={index} >
                                 {(provided) => (
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                     >
-                                        <ListItem disablePadding>
+                                        <ListItem
+                                            ref={listItemRef}
+                                            disablePadding
+                                            className='listStyle'
+                                            classes={{ root: 'listItemHovered' }}
+                                            onMouseEnter={itemHoverHandle}
+                                            onMouseLeave={itemLeaveHandle}
+                                        >
                                             <ListItemButton role={undefined} onClick={taskClickHandle(task.id)}>
                                                 <ListItemIcon>
                                                     <CustomCheckbox
                                                         edge="start"
+                                                        taskkey={task.id}
                                                         checked={task.completed}
                                                         tabIndex={-1}
                                                         disableRipple
@@ -117,7 +142,8 @@ export default function CheckboxList(newTasks) {
                                                     primary={task.value}
                                                     primaryTypographyProps={{
                                                         style: {
-                                                            fontFamily: 'Josefin Sans', fontWeight: 'unset',
+                                                            fontFamily: 'Josefin Sans',
+                                                            fontWeight: 'unset',
                                                             color: task.completed ? '#4f526b' : '#cacbe2',
                                                             textDecoration: task.completed ? 'line-through' : 'none',
                                                         }
@@ -132,7 +158,7 @@ export default function CheckboxList(newTasks) {
                         ))}
                         {provided.placeholder}
                         <ListItem className='action-bar'>
-                            <ListItemText primary={`${tasks.length} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
+                            <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
                             <ListFilter setTasks={setTasks} />
                             <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} />
                         </ListItem>
