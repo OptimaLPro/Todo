@@ -6,7 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import TextField from '@mui/material/TextField';
 import TodoListIcon from './TodoListIcon';
 
-export default function CreateContainer({ onTaskAdded }) {
+export default function CreateContainer({ onTaskAdded, darkmode }) {
     const [taskName, setTaskName] = React.useState('');
 
     const filterType = (event) => {
@@ -23,11 +23,16 @@ export default function CreateContainer({ onTaskAdded }) {
     };
 
     return (
-        <List sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', marginBottom: '30px', paddingBottom: '0px', paddingTop: '0px' }} className='create-container'>
+        <List sx={{
+            width: '100%', maxWidth: 550, marginBottom: '30px', paddingBottom: '0px', paddingTop: '0px',
+            bgcolor: darkmode ? '#ffffff' : '#25273c',
+            transition: 'background-color 0.3s ease-in-out'
+
+        }} className='create-container'>
             <ListItem disablePadding>
                 <ListItemButton role={undefined}>
                     <ListItemIcon>
-                        <TodoListIcon />
+                        <div className='iconStyle' style={{ borderWidth: '2px', borderColor: darkmode ? '#e8e8ea' : '#4c4f6e', }} />
                     </ListItemIcon>
                     <TextField
                         value={taskName}
@@ -38,7 +43,7 @@ export default function CreateContainer({ onTaskAdded }) {
                             style: {
                                 fontFamily: 'Josefin Sans',
                                 fontWeight: 'unset',
-                                color: '#9395ab',
+                                color: '#7b7a7e',
                                 fontSize: '18px',
                             },
                         }}
@@ -52,6 +57,11 @@ export default function CreateContainer({ onTaskAdded }) {
                                     border: 'none',
                                 },
                             },
+                            input: {
+                                "&::placeholder": {    // <----- Add this.
+                                    opacity: 0.8,
+                                },
+                            }
                         }}
                         fullWidth
                     />

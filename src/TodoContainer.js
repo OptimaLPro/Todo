@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 import CustomCheckbox from './CustomCheckbox';
 import ListFilter from './ListFilter';
 
-export default function CheckboxList(newTasks) {
+export default function CheckboxList({ newTasks, darkmode }) {
     const [tasks, setTasks] = React.useState(() => {
         const storedTasks = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -23,10 +23,16 @@ export default function CheckboxList(newTasks) {
         return storedTasks;
     });
 
-
+    useEffect(() => {
+        if (darkmode) {
+            console.log('light mode');
+        } else {
+            console.log('dark mode');
+        }
+    }, [darkmode]);
 
     useEffect(() => {
-        newTasks = newTasks.newTasks || [];
+        newTasks = newTasks || [];
         if (newTasks.length > 0) {
             const updatedTasks = [...tasks, newTasks[newTasks.length - 1]];
             setTasks(updatedTasks);
@@ -106,8 +112,12 @@ export default function CheckboxList(newTasks) {
                     <List
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        sx={{ width: '100%', maxWidth: 550, bgcolor: '#25273c', paddingBottom: '0px', paddingTop: '0px' }}
-                        className='todo-container'
+                        sx={{
+                            width: '100%', maxWidth: 550, paddingBottom: '0px', paddingTop: '0px',
+                            bgcolor: darkmode ? '#ffffff' : '#25273c',
+                            transition: 'background-color 0.3s ease-in-out'
+                        }}
+                        className={'todo-container-light'}
                     >
                         {tasks.map((task, index) => (
                             <Draggable key={task.id} draggableId={String(task.id)} index={index} >
@@ -131,6 +141,7 @@ export default function CheckboxList(newTasks) {
                                                         edge="start"
                                                         taskkey={task.id}
                                                         checked={task.completed}
+                                                        darkmode={darkmode}
                                                         tabIndex={-1}
                                                         disableRipple
                                                         inputProps={{ 'aria-labelledby': `checkbox-list-label-${task.id}` }}
@@ -143,15 +154,25 @@ export default function CheckboxList(newTasks) {
                                                     primaryTypographyProps={{
                                                         style: {
                                                             fontFamily: 'Josefin Sans',
-                                                            fontWeight: 'unset',
-                                                            color: task.completed ? '#4f526b' : '#cacbe2',
+                                                            fontWeight: '600',
+                                                            // color: task.completed ? '#4f526b' : '#cacbe2',
                                                             textDecoration: task.completed ? 'line-through' : 'none',
+
+                                                            color: task.completed
+                                                                ? darkmode
+                                                                    ? '#cacbe2' // Task not completed and dark mode on
+                                                                    : '#4f526b' // Task completed and dark mode off
+                                                                : darkmode
+                                                                    ? '#4f526b' // Task completed and dark mode on
+                                                                    : '#cacbe2',// Task not completed and dark mode off
+                                                            transition: 'color 0.3s ease-in-out',
+
                                                         }
                                                     }}
                                                 />
                                             </ListItemButton>
                                         </ListItem>
-                                        <Divider className='divider' component="li" />
+                                        <Divider className='divider' component="li" sx={{ bgcolor: darkmode ? '#ffffff' : '#474958', transition: 'background-color 0.3s ease-in-out' }} />
                                     </div>
                                 )}
                             </Draggable>
