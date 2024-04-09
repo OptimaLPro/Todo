@@ -23,6 +23,8 @@ export default function CheckboxList(newTasks) {
         return storedTasks;
     });
 
+    
+
     useEffect(() => {
         newTasks = newTasks.newTasks || [];
         if (newTasks.length > 0) {
@@ -56,6 +58,13 @@ export default function CheckboxList(newTasks) {
         reorderedTasks.splice(result.destination.index, 0, reorderedItem);
 
         setTasks(reorderedTasks);
+
+        localStorage.clear();
+        reorderedTasks.forEach((task, index) => {
+            localStorage.setItem(index, JSON.stringify(task));
+        });
+
+        console.log(reorderedTasks);
     };
 
     const clearCompleted = () => {
