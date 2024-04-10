@@ -52,13 +52,24 @@
   max-width: 550px;
 }
 
-@media (max-width: 768px) {
+.main-app{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40px;
+  max-width: 550px;
+
+}
+
+@media (max-width: 1000px) {
   .main-app {
     max-width: 80%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .main-wrapper {
     max-width: 80%;
   }
@@ -86,7 +97,7 @@
   justify-content: center; */
   margin-top: 20px;
   background-color: #25273c;
-  width: 35%;
+  width: 50%;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   padding-top: 0px;
@@ -185,6 +196,12 @@
   padding: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+@media (max-width: 1000px) {
+  .footer-text{
+    font-size: 12px;
+  }
 }
 
 /* Add this CSS to your app.css file */

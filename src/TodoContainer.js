@@ -29,7 +29,8 @@ export default function CheckboxList({ newTasks, darkmode }) {
         } else {
             console.log('dark mode');
         }
-    }, [darkmode]);
+    }, [darkmode
+    ]);
 
     useEffect(() => {
         newTasks = newTasks || [];
@@ -179,9 +180,9 @@ export default function CheckboxList({ newTasks, darkmode }) {
                         ))}
                         {provided.placeholder}
                         <ListItem className='action-bar'>
-                            <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} />
-                            <ListFilter setTasks={setTasks} />
-                            <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} />
+                            <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} className='footer-text' />
+                            <ListFilter setTasks={setTasks} className='footer-text' />
+                            <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} className='footer-text' />
                         </ListItem>
                     </List>
                 )}

@@ -4,7 +4,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import TextField from '@mui/material/TextField';
-import TodoListIcon from './TodoListIcon';
 
 export default function CreateContainer({ onTaskAdded, darkmode }) {
     const [taskName, setTaskName] = React.useState('');
