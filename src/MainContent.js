@@ -48,7 +48,7 @@ const MainContent = () => {
                         repeat={Infinity}
                     />
                     <DarkModeSwitch
-                        checked={isDarkMode}
+                        checked={!isDarkMode}
                         onChange={toggleDarkMode}
                         size={50} />
                 </div>
