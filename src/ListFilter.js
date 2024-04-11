@@ -2,7 +2,7 @@ import { useState } from 'react';
 import React from 'react';
 import ListItemText from '@mui/material/ListItemText';
 
-const ListFilter = ({ setTasks }) => {
+const ListFilter = ({ setTasks, windowWidth }) => {
     const [selectedFilter, setSelectedFilter] = useState('all');
 
     const filter = (e) => {
@@ -46,7 +46,7 @@ const ListFilter = ({ setTasks }) => {
                 className={selectedFilter === 'all' ? 'glowing-hover' : ''}
                 primaryTypographyProps={{
                     style: {
-                        fontSize: '30',
+                        fontSize: windowWidth <= 700 ? '12px' : '16px',
                         fontFamily: 'Josefin Sans',
                         fontWeight: 'unset',
                         color: selectedFilter === 'all' ? '#4171d5' : '#6f7186',
@@ -63,7 +63,7 @@ const ListFilter = ({ setTasks }) => {
                 className={selectedFilter === 'active' ? 'glowing-hover' : ''}
                 primaryTypographyProps={{
                     style: {
-                        fontSize: '30',
+                        fontSize: windowWidth <= 700 ? '12px' : '16px',
                         fontFamily: 'Josefin Sans',
                         fontWeight: 'unset',
                         color: selectedFilter === 'active' ? '#4171d5' : '#6f7186',
@@ -80,7 +80,7 @@ const ListFilter = ({ setTasks }) => {
                 className={selectedFilter === 'completed' ? 'glowing-hover' : ''}
                 primaryTypographyProps={{
                     style: {
-                        fontSize: '30',
+                        fontSize: windowWidth <= 700 ? '12px' : '16px',
                         fontFamily: 'Josefin Sans',
                         fontWeight: 'unset',
                         color: selectedFilter === 'completed' ? '#4171d5' : '#6f7186',

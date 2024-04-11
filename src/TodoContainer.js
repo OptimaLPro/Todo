@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -23,6 +23,20 @@ export default function CheckboxList({ newTasks, darkmode }) {
         storedTasks.sort((a, b) => a.id - b.id);
         return storedTasks;
     });
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         if (darkmode) {
@@ -192,16 +206,23 @@ export default function CheckboxList({ newTasks, darkmode }) {
                                     </div>
                                 )}
                             </Draggable>
-                ))}
-                {provided.placeholder}
-                <ListItem className='action-bar'>
-                    <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} className='footer-text' />
-                    <ListFilter setTasks={setTasks} className='footer-text' />
-                    <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} className='footer-text' />
-                </ListItem>
-            </List>
+                        ))}
+                        {provided.placeholder}
+                        <ListItem className='action-bar'>
+                            <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{
+                                style: {
+                                    fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186',
+                                    fontSize: windowWidth <= 700 ? '12px' : '16px'
+
+
+                                }
+                            }} />
+                            <ListFilter setTasks={setTasks} windowWidth={windowWidth} />
+                            <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: windowWidth <= 700 ? '12px' : '16px', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} />
+                        </ListItem>
+                    </List>
                 )}
-        </Droppable>
+            </Droppable>
 
         </DragDropContext >
     );
