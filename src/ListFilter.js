@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import React from 'react';
 import ListItemText from '@mui/material/ListItemText';
 
-const ListFilter = ({setTasks}) => {
+const ListFilter = ({ setTasks }) => {
+    const [selectedFilter, setSelectedFilter] = useState('all');
 
     const filter = (e) => {
         const filter = e.target.innerText.toLowerCase();
+        setSelectedFilter(filter);
 
         const storedTasks = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -32,11 +35,62 @@ const ListFilter = ({setTasks}) => {
     };
 
 
+    const handleMouseEnter = (filter) => {
+        setSelectedFilter(filter);
+    };
+
     return (
         <div className='list-filter'>
-            <ListItemText primary={`All`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', marginRight: '20px', cursor: 'pointer' } }} onClick={filter} />
-            <ListItemText primary={`Active`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', marginRight: '20px', cursor: 'pointer' } }} onClick={filter} />
-            <ListItemText primary={`Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', cursor: 'pointer' } }} onClick={filter} />
+            <ListItemText
+                primary="All"
+                className={selectedFilter === 'all' ? 'glowing-hover' : ''}
+                primaryTypographyProps={{
+                    style: {
+                        fontSize: '30',
+                        fontFamily: 'Josefin Sans',
+                        fontWeight: 'unset',
+                        color: selectedFilter === 'all' ? '#4171d5' : '#6f7186',
+                        marginRight: '20px',
+                        cursor: 'pointer',
+                        transition: 'color 0.1s ease',
+                    },
+                }}
+                onClick={filter}
+                onMouseEnter={() => handleMouseEnter('all')}
+            />
+            <ListItemText
+                primary="Active"
+                className={selectedFilter === 'active' ? 'glowing-hover' : ''}
+                primaryTypographyProps={{
+                    style: {
+                        fontSize: '30',
+                        fontFamily: 'Josefin Sans',
+                        fontWeight: 'unset',
+                        color: selectedFilter === 'active' ? '#4171d5' : '#6f7186',
+                        marginRight: '20px',
+                        cursor: 'pointer',
+                        // transition: 'color 0.1s ease',
+                    },
+                }}
+                onClick={filter}
+                onMouseEnter={() => handleMouseEnter('active')}
+            />
+            <ListItemText
+                primary="Completed"
+                className={selectedFilter === 'completed' ? 'glowing-hover' : ''}
+                primaryTypographyProps={{
+                    style: {
+                        fontSize: '30',
+                        fontFamily: 'Josefin Sans',
+                        fontWeight: 'unset',
+                        color: selectedFilter === 'completed' ? '#4171d5' : '#6f7186',
+                        cursor: 'pointer',
+                        transition: 'color 0.1s ease',
+                    },
+                }}
+                onClick={filter}
+                onMouseEnter={() => handleMouseEnter('completed')}
+            />
         </div>
     );
 };

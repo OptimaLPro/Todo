@@ -13,6 +13,7 @@ export default function CreateContainer({ onTaskAdded, darkmode }) {
     };
 
     const handleKeyDown = (event) => {
+        console.log(event);
         if (event.key === 'Enter' && taskName.trim() !== '') {
             const newTask = { id: localStorage.length, value: taskName, completed: false };
             localStorage.setItem(localStorage.length, JSON.stringify(newTask));

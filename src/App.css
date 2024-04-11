@@ -42,28 +42,28 @@
   Add some space below the title */
 }
 
-.main-wrapper{
+.main-wrapper {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
   justify-content: space-between;
-  width: 100%;
+  width: 80%;
   margin-bottom: 40px;
   max-width: 550px;
 }
 
-.main-app{
+.main-app {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 80%;
   margin-bottom: 40px;
   max-width: 550px;
 
 }
 
-@media (max-width: 1000px) {
+/* @media (max-width: 1000px) {
   .main-app {
     max-width: 80%;
   }
@@ -73,7 +73,7 @@
   .main-wrapper {
     max-width: 80%;
   }
-}
+} */
 
 .App-link {
   color: #61dafb;
@@ -170,6 +170,7 @@
   cursor: pointer;
 
 }
+
 .todo-list-icon:hover {
   border: 1px solid #ff0000;
   border-radius: 50%;
@@ -199,7 +200,7 @@
 }
 
 @media (max-width: 1000px) {
-  .footer-text{
+  .footer-text {
     font-size: 12px;
   }
 }
@@ -232,4 +233,9 @@
   border-radius: 50px;
   border: 1px solid #534566;
   margin-left: 10px;
+}
+
+.glowing-hover:hover {
+  text-shadow: 0 0 10px #4171d5;
+  transition: text-shadow 0.1s ease;
 }

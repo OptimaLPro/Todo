@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import CustomCheckbox from './CustomCheckbox';
 import ListFilter from './ListFilter';
+import { Tilt } from 'react-tilt'
 
 export default function CheckboxList({ newTasks, darkmode }) {
     const [tasks, setTasks] = React.useState(() => {
@@ -106,6 +107,18 @@ export default function CheckboxList({ newTasks, darkmode }) {
 
     const completedFalseTasksLength = tasks.filter(task => !task.completed).length;
 
+    const defaultOptions = {
+        reverse: false,  // reverse the tilt direction
+        max: 20,     // max tilt rotation (degrees)
+        perspective: 1000,   // Transform perspective, the lower the more extreme the tilt gets.
+        scale: 1.04,    // 2 = 200%, 1.5 = 150%, etc..
+        speed: 1000,   // Speed of the enter/exit transition
+        transition: true,   // Set a transition on enter/exit.
+        axis: null,   // What axis should be disabled. Can be X or Y.
+        reset: true,    // If the tilt effect has to be reset on exit.
+        easing: "cubic-bezier(.03,.98,.52,.99)",    // Easing on enter/exit.
+    }
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="tasks">
@@ -128,66 +141,68 @@ export default function CheckboxList({ newTasks, darkmode }) {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                     >
-                                        <ListItem
-                                            ref={listItemRef}
-                                            disablePadding
-                                            className='listStyle'
-                                            classes={{ root: 'listItemHovered' }}
-                                            onMouseEnter={itemHoverHandle}
-                                            onMouseLeave={itemLeaveHandle}
-                                        >
-                                            <ListItemButton role={undefined} onClick={taskClickHandle(task.id)}>
-                                                <ListItemIcon>
-                                                    <CustomCheckbox
-                                                        edge="start"
-                                                        taskkey={task.id}
-                                                        checked={task.completed}
-                                                        darkmode={darkmode}
-                                                        tabIndex={-1}
-                                                        disableRipple
-                                                        inputProps={{ 'aria-labelledby': `checkbox-list-label-${task.id}` }}
-                                                        sx={{ color: '#ffffff' }}
+                                        <Tilt options={defaultOptions}>
+                                            <ListItem
+                                                ref={listItemRef}
+                                                disablePadding
+                                                className='listStyle'
+                                                classes={{ root: 'listItemHovered' }}
+                                                onMouseEnter={itemHoverHandle}
+                                                onMouseLeave={itemLeaveHandle}
+                                            >
+                                                <ListItemButton role={undefined} onClick={taskClickHandle(task.id)}>
+                                                    <ListItemIcon>
+                                                        <CustomCheckbox
+                                                            edge="start"
+                                                            taskkey={task.id}
+                                                            checked={task.completed}
+                                                            darkmode={darkmode}
+                                                            tabIndex={-1}
+                                                            disableRipple
+                                                            inputProps={{ 'aria-labelledby': `checkbox-list-label-${task.id}` }}
+                                                            sx={{ color: '#ffffff' }}
+                                                        />
+                                                    </ListItemIcon>
+                                                    <ListItemText
+                                                        id={`checkbox-list-label-${task.id}`}
+                                                        primary={task.value}
+                                                        primaryTypographyProps={{
+                                                            style: {
+                                                                fontFamily: 'Josefin Sans',
+                                                                fontWeight: '600',
+                                                                // color: task.completed ? '#4f526b' : '#cacbe2',
+                                                                textDecoration: task.completed ? 'line-through' : 'none',
+
+                                                                color: task.completed
+                                                                    ? darkmode
+                                                                        ? '#cacbe2' // Task not completed and dark mode on
+                                                                        : '#4f526b' // Task completed and dark mode off
+                                                                    : darkmode
+                                                                        ? '#4f526b' // Task completed and dark mode on
+                                                                        : '#cacbe2',// Task not completed and dark mode off
+                                                                transition: 'color 0.3s ease-in-out',
+
+                                                            }
+                                                        }}
                                                     />
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    id={`checkbox-list-label-${task.id}`}
-                                                    primary={task.value}
-                                                    primaryTypographyProps={{
-                                                        style: {
-                                                            fontFamily: 'Josefin Sans',
-                                                            fontWeight: '600',
-                                                            // color: task.completed ? '#4f526b' : '#cacbe2',
-                                                            textDecoration: task.completed ? 'line-through' : 'none',
-
-                                                            color: task.completed
-                                                                ? darkmode
-                                                                    ? '#cacbe2' // Task not completed and dark mode on
-                                                                    : '#4f526b' // Task completed and dark mode off
-                                                                : darkmode
-                                                                    ? '#4f526b' // Task completed and dark mode on
-                                                                    : '#cacbe2',// Task not completed and dark mode off
-                                                            transition: 'color 0.3s ease-in-out',
-
-                                                        }
-                                                    }}
-                                                />
-                                            </ListItemButton>
-                                        </ListItem>
+                                                </ListItemButton>
+                                            </ListItem>
+                                        </Tilt>
                                         <Divider className='divider' component="li" sx={{ bgcolor: darkmode ? '#ffffff' : '#474958', transition: 'background-color 0.3s ease-in-out' }} />
                                     </div>
                                 )}
                             </Draggable>
-                        ))}
-                        {provided.placeholder}
-                        <ListItem className='action-bar'>
-                            <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} className='footer-text' />
-                            <ListFilter setTasks={setTasks} className='footer-text' />
-                            <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} className='footer-text' />
-                        </ListItem>
-                    </List>
+                ))}
+                {provided.placeholder}
+                <ListItem className='action-bar'>
+                    <ListItemText primary={`${completedFalseTasksLength} items left`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186' } }} className='footer-text' />
+                    <ListFilter setTasks={setTasks} className='footer-text' />
+                    <ListItemText primary={`Clear Completed`} primaryTypographyProps={{ style: { fontSize: '30', fontFamily: 'Josefin Sans', fontWeight: 'unset', color: '#6f7186', textAlign: "right", cursor: "pointer" } }} onClick={clearCompleted} className='footer-text' />
+                </ListItem>
+            </List>
                 )}
-            </Droppable>
+        </Droppable>
 
-        </DragDropContext>
+        </DragDropContext >
     );
 }
