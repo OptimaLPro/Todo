@@ -19,17 +19,15 @@ const MainContent = () => {
     const onTaskAdded = (newTask) => {
         setTasks([...tasks, newTask]);
     };
-    
+
 
     return (
         <>
             <header className="App-header">
                 <div className="main-wrapper">
-                    {/* <div className="title">T O D O </div> */}
                     <TypeAnimation
                         cursor={false}
                         sequence={[
-                            // Same substring at the start will only be typed once, initially
                             'T O D O.',
                             7000,
                             'T O D O. today.',
@@ -48,7 +46,7 @@ const MainContent = () => {
                         repeat={Infinity}
                     />
                     <DarkModeSwitch
-                        checked={!isDarkMode}
+                        checked={isDarkMode}
                         onChange={toggleDarkMode}
                         size={50} />
                 </div>
