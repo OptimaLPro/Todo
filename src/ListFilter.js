@@ -30,10 +30,8 @@ const ListFilter = ({ setTasks, windowWidth }) => {
             }
 
         }
-        // storedTasks.sort((a, b) => a.id - b.id);
         setTasks(storedTasks);
     };
-
 
     const handleMouseEnter = (filter) => {
         setSelectedFilter(filter);
